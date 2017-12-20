@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Лабораторка, Гаян/Яворский</title>
+</head>
+<body>
+<script>
+
+    //    var url = "https://restcountries.eu/rest/v2/name/kyrgyzstan";
+    //
+    //    var makeRequest = async function (url) {
+    //        var answer = await $.ajax(url);
+    //        return answer[0].name;
+    //    };
+    //
+    //    var regPromise = makeRequest(url);
+    //    regPromise.then(function (result) {
+    //        console.log("country " + result);
+    //    }).catch(function (e) {
+    //        console.log('Error: "' + e.responseJSON.message + '\"');
+    //    });
+
+    var Observer = function () {
+        this.listeners = {}
+    };
+
+    Observer.prototype.on = function (type, listener) {
+        if (!(type in this.listeners)) {
+            this.listeners[type] = [];
+        }
+        this.listeners[type].push(listener);
+    };
+
+    Observer.prototype.off = function (type, listener) {
+        if (type in this.listeners) {
+            for (var i = 0; i < this.listeners[type].length; i++) {
+                if (this.listeners[type][i] === listener) {
+                    this.listeners[type].splice(i, 1);
+                }
+            }
+        }
+    };
+
+    Observer.prototype.trigger = function (type, arguments) {
+        if (type in this.listeners) {
+            for (var i = 0; i < this.listeners[type].length; i++) {
+                var listener = this.listeners[type][i];
+                listener(arguments);
+            }
+        }
+    };
+
+    var MyPromise = function (callback) {
+        var observer = new Observer();
+        var status = 'pending';
+        var curValue;
+        var curSuccesCallback;
+        var curErrorCallback;
+
+        var resolve = function (result) {
+            if (status === 'pending') {
+                status = 'resolve';
+                curValue = result;
+                observer.trigger('resolve', result);
+                if (curSuccesCallback) {
+                    curSuccesCallback(result);
+                }
+            }
+        };
+        var reject = function (result) {
+            if (status === 'pending') {
+                status = 'reject';
+                curValue = result;
+                if (curErrorCallback) {
+                    curErrorCallback(result);
+                }
+            }
+        };
+        callback(resolve, reject);
+        this.then = function (resaltCallback) {
+            observer.on('resolve', resaltCallback);
+        };
+        this.then = function (sucsCallback) {
+            if (status === "resolved") {
+                sucsCallback(curValue);
+            } else if (status === "pending") {
+                curSuccesCallback = sucsCallback;
+            }
+        };
+        this.catch = function (errorCallback) {
+            if (status === "rejected") {
+                errorCallback(curValue);
+            } else if (status === "pending") {
+                curErrorCallback = errorCallback;
+            }
+        }
+    };
+
+    var sucsPromise = new MyPromise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve('success');
+        }, 1000);
+
+    });
+    sucsPromise.then(function (message) {
+        console.log("работает", message);
+    });
+    var rejPromise = new MyPromise(function (resolve, reject) {
+        reject('niht success')
+    });
+    sucsPromise.catch(function (message) {
+        console.error("не работает", message)
+//        console.log('Error: "' + e.responseJSON.message + '\"');
+    });
+
+
+
+</script>
+</body>
+</html>
+<!--fulfilled — Действие относящееся к промису завершилось успешно// resolve-->
+<!--rejected — Действие относящееся к промису завершилось неудачей-->
+<!--pending — Промис еще не перешел в состояние fulfilled или rejected-->
+<!--settled — Промис перешел в состояние fulfilled или rejected-->

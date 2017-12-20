@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.js"
+            crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $.getJSON('https://pokeapi.co/api/v2/pokemon/').then(function (response) {
+
+                response.results.forEach(function (item) {
+                    var element = $('<li>' + item.name.toUpperCase() + '</li>');
+                    element.on('click', function () {
+                        $.getJSON(item.url).then(function (data) {
+
+//                            console.log(data);
+                        });
+                    });
+
+                    $('#container').append(element);
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+<ul id="container"></ul>
+
+</body>
+</html>

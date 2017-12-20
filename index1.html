@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(document.body).append('<div id="container"></div>');
+            $('#container').css({
+//                "position": "fixed"
+            });
+            $('#container').append('<div id="block"></div>');
+            $('#block').append('<div id="card"></div>');
+            $('#block').append('<div id="count"></div>');
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://pokeapi.co/api/v2/pokemon/",
+                "method": "GET"
+            };
+
+            function getData() {
+                $.ajax(settings).done(function (response) {
+//                    var cnt = response.results.length;
+                    $('#count').text(response.results.length);
+//                    console.log(response);
+//                    console.log(cnt);
+//                    console.log(response.results[0].name);
+                });
+            };
+
+            getData(settings);
+
+            function crateRow() {
+                var cnt = document.getElementById('count');
+                for (var i = 0; i < cnt.textContent; i++) {
+                    $('#block').append('<div id="row"></div>');
+                }
+            }
+
+
+
+//            crateRow(cnt);
+//        var settings = {
+//            "async": true,
+//            "crossDomain": true,
+//            "url": "https://pokeapi.co/api/v2/pokemon/1/",
+//            "method": "GET",
+//        };
+//
+//        $.ajax(settings).done(function (response) {
+//            console.log(response.results[0].name);
+        });
+    </script>
+
+</head>
+<body>
+
+<!--<p id="help">Helpful notes will appear here</p>-->
+<!--<p>1. <input type="text" id="email" name="email"></p>-->
+<!--<p>2. <input type="text" id="name" name="name"></p>-->
+<!--<p>3. <input type="text" id="age" name="age"></p>-->
+<!--<script>-->
+
+<!--function showHelp(help) {-->
+<!--document.getElementById('help').innerHTML = help;-->
+<!--}-->
+
+<!--function makeHelpCallback(help) {-->
+<!--return function() {-->
+<!--showHelp(help);-->
+<!--};-->
+<!--}-->
+
+<!--function setupHelp() {-->
+<!--var helpText = [-->
+<!--{'id': 'email', 'help': 'Your e-mail'},-->
+<!--{'id': 'name', 'help': 'Your full name'},-->
+<!--{'id': 'age', 'help': 'Your age (you should be more than 16)'}-->
+<!--];-->
+
+<!--for (var i = 0; i < helpText.length; i++) {-->
+<!--var item = helpText[i];-->
+<!--document.getElementById(item.id).onfocus = makeHelpCallback(item.help);-->
+<!--}-->
+<!--}-->
+
+<!--setupHelp();-->
+
+<!--</script>-->
+
+
+</body>
+</html>
